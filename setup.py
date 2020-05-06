@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pyspark-me", # Replace with your own username
-    version="0.0.1",
+    version="0.0.2",
     author="Ivan Georgiev",
     #author_email="ivan.georgiev",
     description="Pyspark tools for everyday use",
