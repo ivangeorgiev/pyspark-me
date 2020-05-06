@@ -1,2 +1,3 @@
 # pyspark-me
-Make using Spark easier
+Pyspark and Databricks tools for everyday life
+
