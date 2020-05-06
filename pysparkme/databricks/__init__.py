@@ -178,3 +178,29 @@ def run_export(run_id):
     if response.get('error_code', None):
         raise Exception(response['error_code'] + ' ' + response['message'])
     return response
+
+
+def run_list(job_id=None, offset=None, limit=None,
+        completed_only=False, active_only=False):
+    assert not (completed_only and active_only), "Only one of completed_only or active_only could be True"
+    params = dict()
+    if job_id:
+        params['job_id'] = job_id
+    if offset:
+        params['offset'] = offset
+    if limit:
+        params['limit'] = limit
+    if completed_only:
+        params['completed_only'] = 'true'
+    if active_only:
+        params['active_only'] = 'true'
+
+    response_obj = requests.get(
+        url=_get_url('jobs/runs/list'),
+        params=params,
+        headers=_get_headers()
+    )
+    response = response_obj.json()
+    if response.get('error_code', None):
+        raise Exception(response['error_code'] + ' ' + response['message'])
+    return response
