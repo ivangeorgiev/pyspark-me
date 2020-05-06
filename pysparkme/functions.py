@@ -9,13 +9,14 @@ def as_list(input_df:ps.DataFrame, deep:bool=False,
             order_by:Callable[[object, object],object]=None) -> List[dict]:
     """Convert Spark DataFrame to Python list of dictionaries.
     
-    The DataFrame is collected and each row is converted into
-    a dictionary. Optionally fields of pyspark Row type are 
-    also recursively converted to dictionary.
+    The DataFrame rows are converted into dictionaries and collected into 
+    a list of dictionary. Optionally structure fields of type Row type are 
+    further recursively converted to dictionaries.
     
-    The resulting list could be sorted, using a supplied key function.
-    Sorted list is useful, for example, to compare against expcted 
-    fixture.
+    By default rows in the output list are not ordered. Optionally a key
+    function could be supplied so that the output list is ordered.
+    Ordered list is useful, for example, when testing to compare actual 
+    data against expected data.
     
     Parameters:
       input_df (pyspark.sql.DataFrame): Spark DataFrame to be converted.
