@@ -7,9 +7,9 @@ global _dbc
 
 
 @click.group()
-@click.option('--bearer-token', '-t', help='Bearer token')
-@click.option('--url', '-u', help='Databricks URL')
-@click.option('--cluster-id', '-c', help='Databricks URL')
+@click.option('--bearer-token', '-t', help='Bearer token. Default to DATABRICKS_BEARER_TOKEN environment variable')
+@click.option('--url', '-u', help='Databricks URL. Default to DATABRICKS_URL environment variable')
+@click.option('--cluster-id', '-c', help='Databricks cluster ID. Default to DATABRICKS_CLUSTER_ID environment variable')
 @click.option('-v', help='Verbose 1')
 @click.option('-vv', help='Verbose 2')
 @click.option('-vvv', help='Verbose 3')
@@ -23,12 +23,12 @@ def cli(bearer_token, url, cluster_id, v, vv, vvv):
 
     _dbc = connect(bearer_token, url=url, cluster_id=cluster_id)
 
-@cli.group()
+@cli.group(help='Databricks workspace commands')
 def workspace():
     pass
 
 
-@workspace.command()
+@workspace.command(help='List Databricks workspace item(s)')
 @click.argument('path')
 @click.option('--json-indent', help='Number of spaces to use for JSON output indentation.')
 def ls(path,json_indent):
@@ -38,7 +38,7 @@ def ls(path,json_indent):
     print(json.dumps(_dbc.workspace.ls(path), indent=json_indent, default=lambda o: o.__dict__()))
 
 
-@workspace.command()
+@workspace.command(help='Export Databricks workspace items')
 @click.option('--format','-f', default='SOURCE', help='Export format: DBC, HTML, JUPYTER, SOURCE')
 @click.option('--output', '-o', help='Output to a file or directory.')
 @click.argument('path')
