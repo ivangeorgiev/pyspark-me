@@ -3,6 +3,7 @@ import base64
 from typing import List
 from dataclasses import dataclass, field, asdict
 from .common import Api, Link, DatabricksLinkException, ERR_RESOURCE_DOES_NOT_EXIST
+from .common import DataClass
 
 class ExportFormat(enum.Enum):
     SOURCE = 'SOURCE',
@@ -11,7 +12,7 @@ class ExportFormat(enum.Enum):
     DBC = 'DBC'
 
 @dataclass
-class ObjectInfo:
+class ObjectInfo(DataClass):
     object_type: str
     object_id: str
     path: str
@@ -24,10 +25,6 @@ class ObjectInfo:
         self.is_notebook = self.object_type == 'NOTEBOOK'
         self.is_directory = self.object_type == 'DIRECTORY'
         self.is_library = self.object_type == 'LIBRARY'
-
-
-    def __dict__(self):
-        return asdict(self)
 
 class Workspace(Api):
     def __init__(self, link):

@@ -1,5 +1,6 @@
 import bisect
 import requests
+import dataclasses
 
 DEFAULT_URL = 'https://westeurope.azuredatabricks.net'
 
@@ -87,3 +88,8 @@ def bite_size_str(size, format_string=None, base=1000):
     number_part = size/sizes[i]
     format_string = format_string or "{0:.3n} {1}B" 
     return format_string.format(size/sizes[i], prefixes[i])
+
+class DataClass:
+
+    def __dict__(self):
+        return dataclasses.asdict(self)
