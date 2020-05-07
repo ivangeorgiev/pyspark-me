@@ -53,7 +53,9 @@ def export(path, output, format):
             rel_path = item_path[len(path):]
             to_path = '{}/{}'.format(output, rel_path)
             try:
-                to_path = to_path + extensions[languages.index(item.language)]
+                ext = extensions[languages.index(item.language)]
+                if not to_path.endswith(ext):
+                    to_path = to_path + ext
             except ValueError:
                 ext = ''
             to_path = to_path
@@ -96,7 +98,7 @@ def export(path, output, format):
         export_dir(path)
     else:
         item = _dbc.workspace.ls(path)[0]
-        is_recursive = item.is_directory()
+        is_recursive = item.is_directory
         export_item(item)
 
 cli()
