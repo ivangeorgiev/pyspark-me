@@ -39,7 +39,7 @@ def ls(path,json_indent):
     path = path if len(path) and path[0] == '/' else '/' + path
     json_indent = int(json_indent) if isinstance(json_indent, str) and json_indent.isnumeric() else json_indent
     try:
-        print(json.dumps(_dbc.workspace.ls(path), indent=json_indent, default=lambda o: o.__dict__()))
+        print(json.dumps(_dbc.workspace.ls(path), indent=json_indent, default=lambda o: dict(o)))
     except DatabricksLinkException as exc:
         sys.stderr.write("{}\n".format(str(exc)))
     except Exception as exc:
@@ -128,7 +128,8 @@ def ls(path, json_indent):
     json_indent = int(json_indent) if isinstance(json_indent, str) and json_indent.isnumeric() else json_indent
 
     try:
-        print(json.dumps(_dbc.dbfs.ls(path), indent=json_indent, default=lambda o: o.__dict__()))
+        result = _dbc.dbfs.ls(path)
+        print(json.dumps(result, indent=json_indent, default=lambda o: dict(o)))
     except DatabricksLinkException as exc:
         sys.stderr.write("{}\n".format(str(exc)))
     except Exception as exc:
