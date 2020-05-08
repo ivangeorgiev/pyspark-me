@@ -27,7 +27,7 @@ class DatabricksRun(DataClass):
     run_type: str = None
 
 @dataclass
-class RunList(DataClass):
+class DatabricksRunList(DataClass):
     runs: List[DatabricksRun]
     has_more: bool
 
@@ -36,7 +36,13 @@ class Runs(Api):
     def __init__(self, link):
         super().__init__(link, path='jobs/runs')
 
-     def submit_notebook(self, path, params=None, run_name=None, cluster_id=None):
+    def get(self, run_id) -> DatabricksRun:
+        response = self.link.get(
+            self.path('get'),
+            params=dict(run_id=run_id),)
+        return DatabricksRun(**response)
+
+    def submit_notebook(self, path, params=None, run_name=None, cluster_id=None):
         cluster_id = cluster_id or self.link.cluster_id
         assert cluster_id, f"cluster_id not specified. Set cluster_id with connect or pass as parameter"
 
@@ -60,7 +66,7 @@ class Runs(Api):
         return response['run_id']
 
     def ls(self, job_id=None, offset=None, limit=None,
-            completed_only=False, active_only=False):
+            completed_only=False, active_only=False) -> DatabricksRunList:
         assert not (completed_only and active_only), "Only one of completed_only or active_only could be True"
         params = dict()
         if job_id:
@@ -79,5 +85,5 @@ class Runs(Api):
             params=params
         )
         return RunList(
-                runs=[DatabricksRun(**run) for run in response['runs']],
+                runs=[DatabricksRunList(**run) for run in response['runs']],
                 has_more=response['has_more'],)
