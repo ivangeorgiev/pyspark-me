@@ -99,14 +99,3 @@ def random_id(length, namespace=''):
     namespace_url = 'https://pypi.org/project/pyspark-me/#' + namespace
     return str(uuid.uuid5(uuid.NAMESPACE_URL, namespace_url)).replace('-','')[:length]
 
-class DataClass:
-
-
-    def asdict(self) -> dict:
-        return dataclasses.asdict(self)
-
-    # def __dict__(self) -> dict:
-    #     return dataclasses.asdict(self)
-
-    def __iter__(self):
-        return iter(self.asdict().items())
