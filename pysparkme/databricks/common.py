@@ -101,5 +101,12 @@ def random_id(length, namespace=''):
 
 class DataClass:
 
-    def __dict__(self):
+
+    def asdict(self) -> dict:
         return dataclasses.asdict(self)
+
+    # def __dict__(self) -> dict:
+    #     return dataclasses.asdict(self)
+
+    def __iter__(self):
+        return iter(self.asdict().items())
