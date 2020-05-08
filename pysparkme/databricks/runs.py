@@ -26,10 +26,40 @@ class DatabricksRun(DataClass):
     run_page_url: str = None
     run_type: str = None
 
+    @staticmethod
+    def from_dict(d: dict) -> 'DatabricksRun':
+        return DatabricksRun(**d)
+
 @dataclass
 class DatabricksRunList(DataClass):
     runs: List[DatabricksRun]
     has_more: bool
+
+@dataclass
+class DatabircksNotebookOutput(DataClass):
+    result: str = None
+    truncated: bool = False
+
+    @staticmethod
+    def from_dict(d: dict) -> 'DatabircksNotebookOutput':
+        return DatabircksNotebookOutput(**d)
+
+@dataclass
+class DatabricksRunOutput(DataClass):
+    notebook_output: DatabircksNotebookOutput = None
+    error: str = None
+    metadata: DatabricksRun = None
+
+    @staticmethod
+    def from_dict(d: dict) -> 'DatabricksRunOutput':
+        notebook_output = d.get('notebook_output', None)
+        if notebook_output != None:
+            d['notebook_output'] = DatabircksNotebookOutput.from_dict(notebook_output)
+        metadata = d.get('metadata', None)
+        if metadata != None:
+            d['metadata'] = DatabricksRun.from_dict(metadata)
+        return DatabricksRunOutput(**d)
+
 
 
 class Runs(Api):
@@ -41,6 +71,12 @@ class Runs(Api):
             self.path('get'),
             params=dict(run_id=run_id),)
         return DatabricksRun(**response)
+
+    def get_output(self, run_id) -> DatabricksRun:
+        response = self.link.get(
+            self.path('get-output'),
+            params=dict(run_id=run_id),)
+        return DatabricksRunOutput.from_dict(response)
 
     def submit_notebook(self, path, params=None, run_name=None, cluster_id=None):
         cluster_id = cluster_id or self.link.cluster_id
