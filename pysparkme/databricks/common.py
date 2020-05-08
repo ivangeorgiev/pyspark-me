@@ -1,6 +1,7 @@
 import bisect
 import requests
 import dataclasses
+import uuid
 
 DEFAULT_URL = 'https://westeurope.azuredatabricks.net'
 
@@ -45,12 +46,16 @@ class Link:
             raise DatabricksLinkException(response['error_code'], response['message'])
         return response
 
-    def post(self, verb, params=None):
-        response_obj = requests.post(
-                url=self._get_url(verb),
-                params=(params or {}),
-                headers=self._get_headers()
-            )
+    def post(self, verb, params=None, json=None):
+        args = dict(
+            url=self._get_url(verb),
+            headers=self._get_headers()
+        )
+        if params:
+            args['params'] = params
+        if json:
+            args['json'] = json
+        response_obj = requests.post(**args)
         response = response_obj.json()
         if response.get('error_code', None):
             raise DatabricksLinkException(response['error_code'], response['message'])
@@ -88,6 +93,11 @@ def bite_size_str(size, format_string=None, base=1000):
     number_part = size/sizes[i]
     format_string = format_string or "{0:.3n} {1}B" 
     return format_string.format(size/sizes[i], prefixes[i])
+
+
+def random_id(length, namespace=''):
+    namespace_url = 'https://pypi.org/project/pyspark-me/#' + namespace
+    return str(uuid.uuid5(uuid.NAMESPACE_URL, namespace_url)).replace('-','')[:length]
 
 class DataClass:
 

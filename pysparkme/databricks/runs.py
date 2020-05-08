@@ -1,3 +1,4 @@
+import datetime
 from .common import Api
 
 class Runs(Api):
@@ -29,4 +30,27 @@ class Runs(Api):
             params=dict(run_id=run_id))
         return response
 
+
+    def run_submit_notebook(self, path, params=None, run_name=None, cluster_id=None):
+        cluster_id = cluster_id or self.link.cluster_id
+        assert cluster_id, f"cluster_id not specified. Set cluster_id with connect or pass as parameter"
+
+        params = params or {}
+        run_name = run_name or "pyspark-me-" + str(int(datetime.datetime.now().timestamp()))
+
+        r = dict(
+            run_name=run_name,
+            existing_cluster_id=cluster_id,
+            libraries=[],
+            notebook_task=dict(
+                notebook_path=path,
+                base_parameters=params
+            ),
+        )
+
+        response = self.link.post(
+            self.path('submit'),
+            json=r
+        )
+        return response['run_id']
 
