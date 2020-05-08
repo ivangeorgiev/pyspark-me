@@ -1,42 +1,28 @@
 import base64
-from dataclasses import dataclass, field
 from typing import List
 from .common import Api, DatabricksLinkException, ERR_RESOURCE_DOES_NOT_EXIST
-from .common import bite_size_str
-from .common import DataClass
-
-@dataclass
-class FileInfo(DataClass):
-    path: str
-    is_dir: bool
-    file_size: int
-    is_file: bool = None
-    human_size: str = field(init=False, compare=False)
-
-    def __post_init__(self):
-        self.human_size = bite_size_str(self.file_size)
-        self.is_file = not self.is_dir
+from .databricks_data_classes import *
 
 class DBFS(Api):
     def __init__(self, link):
         super().__init__(link, path='dbfs')
 
-    def list(self, path=None) -> List[FileInfo]:
+    def list(self, path=None) -> List[DatabricksFileInfo]:
         get_result = self.link.get(
             self.path('list'),
             params=dict(path=(path or '/')))
         files = get_result.get('files', [])
-        result = [FileInfo(**f) for f in files]
+        result = [DatabricksFileInfo(**f) for f in files]
         return result
 
-    def info(self, path=None) -> FileInfo:
+    def info(self, path=None) -> DatabricksFileInfo:
         response = self.link.get(
             self.path('get-status'),
             params=dict(path=(path or '/')))
-        result = FileInfo(**response)
+        result = DatabricksFileInfo(**response)
         return result
 
-    def ls(self, path=None) -> List[FileInfo]:
+    def ls(self, path=None) -> List[DatabricksFileInfo]:
         return self.list(path)
 
     def exists(self, path) -> bool:

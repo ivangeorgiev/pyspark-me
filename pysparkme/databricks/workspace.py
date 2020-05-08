@@ -1,9 +1,8 @@
 import enum
 import base64
 from typing import List
-from dataclasses import dataclass, field, asdict
 from .common import Api, Link, DatabricksLinkException, ERR_RESOURCE_DOES_NOT_EXIST
-from .common import DataClass
+from .databricks_data_classes import *
 
 class ExportFormat(enum.Enum):
     SOURCE = 'SOURCE',
@@ -11,30 +10,15 @@ class ExportFormat(enum.Enum):
     JUPYTER = 'JUPYTER',
     DBC = 'DBC'
 
-@dataclass
-class ObjectInfo(DataClass):
-    object_type: str
-    object_id: str
-    path: str
-    language: str = None
-    is_directory: bool = None
-    is_notebook: bool = None
-    is_library: bool = None
-
-    def __post_init__(self):
-        self.is_notebook = self.object_type == 'NOTEBOOK'
-        self.is_directory = self.object_type == 'DIRECTORY'
-        self.is_library = self.object_type == 'LIBRARY'
-
 class Workspace(Api):
     def __init__(self, link):
         super().__init__(link, path='workspace')
 
-    def ls(self, path=None) -> List[ObjectInfo]:
+    def ls(self, path=None) -> List[DatabricksObjectInfo]:
         response = self.link.get(
             self.path('list'),
             params=dict(path=(path or '/')))
-        objects = [ObjectInfo(**obj) for obj in response.get('objects', [])]
+        objects = [DatabricksObjectInfo(**obj) for obj in response.get('objects', [])]
         return objects
 
     def exists(self, path):
