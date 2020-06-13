@@ -8,7 +8,10 @@ DEFAULT_URL = 'https://westeurope.azuredatabricks.net'
 ERR_RESOURCE_DOES_NOT_EXIST = 'RESOURCE_DOES_NOT_EXIST'
 
 class Link:
-    def __init__(self, bearer_token, url=None, cluster_id=None):
+    def __init__(self, bearer_token, url:str=None, cluster_id=None):
+        url or DEFAULT_URL
+        if url.endswith('/'):
+            url = url[:-1]
         self._bearer_token = bearer_token
         self._url = url or DEFAULT_URL
         self._cluster_id = cluster_id

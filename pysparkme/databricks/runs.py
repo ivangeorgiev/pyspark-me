@@ -69,6 +69,6 @@ class Runs(Api):
             self.path('list'),
             params=params
         )
-        return RunList(
-                runs=[DatabricksRunList(**run) for run in response['runs']],
-                has_more=response['has_more'],)
+        return DatabricksRunList(
+                runs=[DatabricksRun(**run) for run in response.get('runs',[])],
+                has_more=response.get('has_more', False),)

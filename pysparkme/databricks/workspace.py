@@ -28,13 +28,13 @@ class Workspace(Api):
         except DatabricksLinkException as exc:
             if exc.error_code == ERR_RESOURCE_DOES_NOT_EXIST:
                 result = False
-        return result
+        return result        
 
     def is_directory(self, path):
         if path == '/':
             return True
         item = self.ls(path)[0]
-        return item.is_directory
+        return item.path != path
 
     def export(self, path:str, format:ExportFormat=ExportFormat.SOURCE) -> bytes:
         format = ExportFormat[format] if isinstance(format, str) else format
