@@ -188,6 +188,22 @@ You can retrieve the job information using `runs get`:
 $ dbr-me runs get 4 -i 3
 ```
 
+
+
+If you need to pass parameters, use the `--parameters` or `-p` option and specify JSON text.
+
+```bash
+$ dbr-me runs submit -p '{"run_tag":"Thimo request"}' "Utils/Download MovieLens"
+```
+
+You can refer also to parameters in JSON file:
+
+```bash
+dbr-me runs submit -p '@./.dev/params.json' "Utils/Download MovieLens"
+```
+
+
+
 #### Get run metadata
 
 Implements: [Databricks REST runs/get](https://docs.databricks.com/dev-tools/api/latest/jobs.html#runs-get) 

@@ -275,9 +275,10 @@ def ls(job_id=None, completed_only=False, active_only=False, offset=None, limit=
 @runs.command()
 @click.argument('path', required=True, type=str)
 @click.option('--run-name', '-n', help='Run name')
+@click.option('--parameters', '-p', type=str, help='Parameters JSON object.')
 @click.option('--cluster-id', '-c', help='Cluster ID. Default from DATABRICKS_CLUSTER_ID environment variable.')
 @click.option('--json-indent', help='Number of spaces to use for JSON output indentation.')
-def submit(path, run_name=None, cluster_id=None, json_indent=None):
+def submit(path, run_name=None, parameters=None, cluster_id=None, json_indent=None):
     '''
     Submit a one-time run. Doesn’t require a Databricks job to be created.
 
@@ -287,8 +288,16 @@ def submit(path, run_name=None, cluster_id=None, json_indent=None):
     path = path if path.startswith('/') else '/' + path
     json_indent = int(json_indent) if isinstance(json_indent, str) and json_indent.isnumeric() else json_indent
 
+    if parameters:
+        if parameters.startswith('@'):
+            with open(parameters[1:], 'r', encoding='utf8') as f:
+                parameters = f.read()
+        params = json.loads(parameters)
+    else:
+        params = None
+
     try:
-        result = _dbc.jobs.runs.submit_notebook(path, run_name=run_name)
+        result = _dbc.jobs.runs.submit_notebook(path=path, params=params, run_name=run_name)
         print(json.dumps({'run_id': result}, indent=json_indent, default=lambda o: dict(o)))
     except DatabricksLinkException as exc:
         sys.stderr.write("{}\n".format(str(exc)))
