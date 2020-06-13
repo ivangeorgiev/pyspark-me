@@ -22,59 +22,9 @@ $ pip install pyspark-me
 
 
 
-## Python Client SDK for Databricks REST APIs
-
-### Create Databricks connection
-
-```python
-# Get Databricks workspace connection
-dbc = pysparkme.databricks.connect(
-        bearer_token='dapixyzabcd09rasdf',
-        url='https://westeurope.azuredatabricks.net')
-```
-
-### DBFS
-
-```python
-# Get list of items at path /FileStore
-dbc.dbfs.ls('/FileStore')
-
-# Check if file or directory exists
-dbc.dbfs.exists('/path/to/heaven')
-
-# Make a directory and it's parents
-dbc.dbfs.mkdirs('/path/to/heaven')
-
-# Delete a directory recusively
-dbc.dbfs.rm('/path', recursive=True)
-
-# Download file block starting 1024 with size 2048
-dbc.dbfs.read('/data/movies.csv', 1024, 2048)
-
-# Download entire file
-dbc.dbfs.read_all('/data/movies.csv')
-```
-
-### Databricks workspace
-
-```python
-# List root workspace directory
-dbc.workspace.ls('/')
-
-# Check if workspace item exists
-dbc.workspace.exists('/explore')
-
-# Check if workspace item is a directory
-dbc.workspace.is_directory('/')
-
-# Export notebook in default (SOURCE) format
-dbc.workspace.export('/my_notebook')
-
-# Export notebook in HTML format
-dbc.workspace.export('/my_notebook', 'HTML')
-```
-
 ## Databricks CLI `dbr-me`
+
+`dbr-me`  Databricks command line client provides convenient way to interact with Databricks cluster at the command line. A very popular use of such approach in in automation tasks, like DevOps pipelines or third party workflow managers.
 
 You can call the Databricks CLI using convenient shell command `dbr-me`:
 
@@ -449,6 +399,62 @@ $ dbr-me runs get-output -r 6
 
 ```
 Downloaded files: README.txt, links.csv, movies.csv, ratings.csv, tags.csv
+```
+
+
+
+## Python Client SDK for Databricks REST APIs
+
+To implement your own Databricks REST API client, you can use the Python Client SDK for Databricks REST APIs.
+
+### Create Databricks connection
+
+```python
+# Get Databricks workspace connection
+dbc = pysparkme.databricks.connect(
+        bearer_token='dapixyzabcd09rasdf',
+        url='https://westeurope.azuredatabricks.net')
+```
+
+### DBFS
+
+```python
+# Get list of items at path /FileStore
+dbc.dbfs.ls('/FileStore')
+
+# Check if file or directory exists
+dbc.dbfs.exists('/path/to/heaven')
+
+# Make a directory and it's parents
+dbc.dbfs.mkdirs('/path/to/heaven')
+
+# Delete a directory recusively
+dbc.dbfs.rm('/path', recursive=True)
+
+# Download file block starting 1024 with size 2048
+dbc.dbfs.read('/data/movies.csv', 1024, 2048)
+
+# Download entire file
+dbc.dbfs.read_all('/data/movies.csv')
+```
+
+### Databricks workspace
+
+```python
+# List root workspace directory
+dbc.workspace.ls('/')
+
+# Check if workspace item exists
+dbc.workspace.exists('/explore')
+
+# Check if workspace item is a directory
+dbc.workspace.is_directory('/')
+
+# Export notebook in default (SOURCE) format
+dbc.workspace.export('/my_notebook')
+
+# Export notebook in HTML format
+dbc.workspace.export('/my_notebook', 'HTML')
 ```
 
 
