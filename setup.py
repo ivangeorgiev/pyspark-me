@@ -4,11 +4,11 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="pyspark-me", # Replace with your own username
-    version="0.0.5",
+    name="pyspark-me",
+    version="0.0.6",
     author="Ivan Georgiev",
     #author_email="ivan.georgiev",
-    description="Pyspark tools for everyday use",
+    description="Databricks client SDK with command line client for Databricks REST APIs",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/ivangeorgiev/pyspark-me",

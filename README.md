@@ -1,5 +1,5 @@
 # pyspark-me
-Databricks made easy with Python client SDK and command line client for Databricks REST APIs.
+Databricks client SDK for Python with command line interface for Databricks REST APIs.
 
 [TOC]
 
