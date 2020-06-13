@@ -1,7 +1,20 @@
 # pyspark-me
-Pyspark and Databricks tools for everyday life
+Databricks made easy with Python client SDK and command line client for Databricks REST APIs.
 
-## Synopsis
+[TOC]
+
+## Introduction
+
+Pysparkme package provides python SDK for Databricks REST API:
+
+* dbfs
+* workspace
+* jobs
+* runs
+
+The package also comes with a useful CLI which might be very helpful in automation.
+
+## Python Client SDK for Databricks REST APIs
 
 ### Create Databricks connection
 
@@ -53,7 +66,27 @@ dbc.workspace.export('/my_notebook')
 dbc.workspace.export('/my_notebook', 'HTML')
 ```
 
-## Databricks CLI `dbrme`
+## Databricks CLI `dbr-me`
+
+You can call the Databricks CLI using convenient shell command `dbr-me`:
+
+```bash
+$ dbr-me --help
+```
+
+ or using python module:
+
+```bash
+$ python -m pysparkme.databricks.cli --help
+```
+
+To connect to the Databricks cluster, you can supply arguments at the command line:
+
+* `--bearer-token`
+* `--url`
+* `--cluster-id`
+
+Alternatively, you can define environment variables. Command line arguments take precedence.
 
 ```bash
 export DATABRICKS_URL='https://westeurope.azuredatabricks.net/'
@@ -62,10 +95,7 @@ export DATABRICKS_CLUSTER_ID='1234-456778-abc234'
 export DATABRICKS_ORG_ID='87287878293983984'
 ```
 
-```bash
-# Get help
-dbrme --help
-```
+
 
 ### Workspace
 
@@ -97,7 +127,7 @@ dbr-me workspace export -o ./.dev/GetML 'Utils/Download MovieLens.py'
 
 ### DBFS
 
-#### List Items on DBFS
+#### List DBFS items
 
 ```bash
 # List items on DBFS
