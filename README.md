@@ -105,34 +105,6 @@ export DATABRICKS_ORG_ID='87287878293983984'
 
 
 
-### Workspace
-
-```bash
-####################
-# List workspace
-# Default path is root - '/'
-dbr-me workspace ls
-# auto-add leading '/'
-dbr-me workspace ls 'Users'
-# Space-indentend json output with number of spaces
-dbr-me workspace --json-indent 4 ls
-# Custom indent string
-dbr-me workspace ls --json-indent='>'
-
-#####################
-# Export workspace items
-# Export everything in source format using defaults: format=SOURCE, path=/
-dbr-me workspace export -o ./.dev/export
-# Export everything in DBC format
-dbr-me workspace export -f DBC -o ./.dev/export.
-# When path is folder, export is recursive
-dbr-me workspace export -o ./.dev/export-utils 'Utils'
-# Export single ITEM
-dbr-me workspace export -o ./.dev/GetML 'Utils/Download MovieLens.py'
-```
-
-
-
 ### DBFS
 
 #### List DBFS items
@@ -154,12 +126,14 @@ dbr-me dbfs ls --json-indent 3 FileStore/movielens
 ]
 ```
 
-
+#### Download file from DBFS
 
 ```bash
 # Download a file and print to STDOUT
 dbr-me dbfs get ml-latest-small/movies.csv
 ```
+
+#### Download directory from DBFS
 
 ```bash
 # Download recursively entire directory and store locally
@@ -168,7 +142,47 @@ dbr-me dbfs get -o ml-local ml-latest-small
 
 
 
+### Workspace
+
+Databricks workspace contains notebooks and other items.
+
+#### List workspace
+
+```bash
+####################
+# List workspace
+# Default path is root - '/'
+$ dbr-me workspace ls
+# auto-add leading '/'
+$ dbr-me workspace ls 'Users'
+# Space-indentend json output with number of spaces
+$ dbr-me workspace --json-indent 4 ls
+# Custom indent string
+$ dbr-me workspace ls --json-indent='>'
+```
+
+
+
+#### Export items from Databricks workspace
+
+```bash
+#####################
+# Export workspace items
+# Export everything in source format using defaults: format=SOURCE, path=/
+dbr-me workspace export -o ./.dev/export
+# Export everything in DBC format
+dbr-me workspace export -f DBC -o ./.dev/export.
+# When path is folder, export is recursive
+dbr-me workspace export -o ./.dev/export-utils 'Utils'
+# Export single ITEM
+dbr-me workspace export -o ./.dev/GetML 'Utils/Download MovieLens.py'
+```
+
+
+
 ### Runs
+
+This command group implements the [`jobs/runs` Databricks REST API](https://docs.databricks.com/dev-tools/api/latest/jobs.html#runs-submit).
 
 #### Submit a notebook
 
@@ -193,13 +207,66 @@ $ dbr-me runs get 4 -i 3
 If you need to pass parameters, use the `--parameters` or `-p` option and specify JSON text.
 
 ```bash
-$ dbr-me runs submit -p '{"run_tag":"Thimo request"}' "Utils/Download MovieLens"
+$ dbr-me runs submit -p '{"run_tag":"20250103"}' "Utils/Download MovieLens"
 ```
 
 You can refer also to parameters in JSON file:
 
 ```bash
-dbr-me runs submit -p '@./.dev/params.json' "Utils/Download MovieLens"
+$ dbr-me runs submit -p '@params.json' "Utils/Download MovieLens"
+```
+
+You can use the parameters in the notebook and will also be able to see them in the run metadata:
+
+```bash
+dbr-me runs get-output -i 3 8
+```
+
+```json
+{
+   "notebook_output": {
+      "result": "Downloaded files (tag: 20250103): README.txt, links.csv, movies.csv, ratings.csv, tags.csv",
+      "truncated": false
+   },
+   "error": null,
+   "metadata": {
+      "job_id": 8,
+      "run_id": 8,
+      "creator_user_name": "your.name@gmail.com",
+      "number_in_job": 1,
+      "original_attempt_run_id": null,
+      "state": {
+         "life_cycle_state": "TERMINATED",
+         "result_state": "SUCCESS",
+         "state_message": ""
+      },
+      "schedule": null,
+      "task": {
+         "notebook_task": {
+            "notebook_path": "/Utils/Download MovieLens",
+            "base_parameters": {
+               "run_tag": "20250103"
+            }
+         }
+      },
+      "cluster_spec": {
+         "existing_cluster_id": "xxxx-yyyyyy-zzzzzz"
+      },
+      "cluster_instance": {
+         "cluster_id": "xxxx-yyyyyy-zzzzzzzz",
+         "spark_context_id": "8734983498349834"
+      },
+      "overriding_parameters": null,
+      "start_time": 1592067357734,
+      "setup_duration": 0,
+      "execution_duration": 11000,
+      "cleanup_duration": 0,
+      "trigger": null,
+      "run_name": "pyspark-me-1592067355",
+      "run_page_url": "https://westeurope.azuredatabricks.net/?o=89349849834#job/8/run/1",
+      "run_type": "SUBMIT_RUN"
+   }
+}
 ```
 
 
