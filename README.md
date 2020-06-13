@@ -2,7 +2,6 @@
 Databricks client SDK for Python with command line interface for Databricks REST APIs.
 
 {:toc}
-[TOC]
 
 ## Introduction
 
@@ -14,6 +13,14 @@ Pysparkme package provides python SDK for Databricks REST API:
 * runs
 
 The package also comes with a useful CLI which might be very helpful in automation.
+
+## Installation
+
+```bash
+$ pip install pyspark-me
+```
+
+
 
 ## Python Client SDK for Databricks REST APIs
 
